@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 void main() {
     Process.run("python3", ["-m", "pip", "install", "-U", "normatrix"]).then((result) {
@@ -97,21 +98,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 path = '.';
             }
             _hintText = File(path).resolveSymbolicLinksSync();
-            Process.run("python3", ["-m", "normatrix", _hintText, "--only-error"]).then((result) {
+            Process.run("python3", ["-m", "normatrix", _hintText, "--output", "md"]).then((result) {
                 setState(() {
-                    String stdoutStr = result.stdout.toString();
-                    final String stderrStr = result.stderr.toString();
-                    stderr.write(stderrStr);
-                    _allWidget.clear();
-                    stdoutStr = stdoutStr.replaceAll(RegExp(r"\[.*?m"), "");
-                    final listStr = stdoutStr.split(RegExp(r"\n"));
-                    for (String elem in listStr) {
-                        _allWidget.add(Text(elem));
-                    }
+                    File("normatrix-result.md").readAsString().then((str) {
+                        setState(() {
+                            _allWidget.add(MarkdownBody(
+                                            data: str,
+                            ));
+                            File("normatrix-result.md").delete();
+                        });
+                    });
+                    stderr.write(result.stderr);
                     status = 0;
                 });
             });
-            _allWidget.clear();
             _allWidget.add(Text("normatrix is launched for '$_hintText', you will get results soon"));
         });
     }
