@@ -98,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 path = '.';
             }
             _hintText = File(path).resolveSymbolicLinksSync();
-            Process.run("python3", ["-m", "normatrix", _hintText, "--output", "md"]).then((result) {
+            Process.run("python3", ["-m", "normatrix", _hintText, "--output", "md", "--preview", "--only-error"]).then((result) {
                 setState(() {
                     File("normatrix-result.md").readAsString().then((str) {
                         setState(() {
