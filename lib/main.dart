@@ -6,8 +6,8 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 void main() {
     Process.run("python3", ["-m", "pip", "install", "-U", "normatrix"]).then((result) {
         if (result.exitCode != 0) {
-            stdout.write("Can't install normatrix requirements\n");
-            stdout.write("you need python3 and pip installed on your OS\n");
+            stderr.write("Can't install normatrix requirements\n");
+            stderr.write("you need python3 and pip installed on your OS\n");
             return;
         } else {
             stdout.write("normatrix is installed and updated\n");
